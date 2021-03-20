@@ -1,2 +1,2 @@
-Tesis Rocío Cerdá
-v2
+Tesis MRI 
+by Rocío Cerdá
