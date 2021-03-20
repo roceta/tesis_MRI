@@ -1,2 +1,0 @@
-Tesis MRI 
-by Rocío Cerdá
