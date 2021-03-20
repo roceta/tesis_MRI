@@ -6,7 +6,7 @@
 
 #Archivos
 
-  archivo_datos_inditex <- 'datos_inditex.csv'
+  archivo_datos_inditex <- './data/datos_inditex.csv'
 
 
 #---- 1. Leo los datos ----
