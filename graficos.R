@@ -47,6 +47,7 @@
       'ejercicio',
       'valor'
   )
+  datos_ventas_totales['valor'] <- datos_ventas_totales['valor'] / 1000
     
 
   #3.2 Beneficio neto total (en Miles de millones)
@@ -58,6 +59,7 @@
       'ejercicio',
       'valor'
   )
+  datos_beneficio_neto_total['valor'] <- datos_beneficio_neto_total['valor'] / 100
   
   #3.3 Ventas por region
   datos_ventas_por_region <- select(datos_inditex %>% 
@@ -123,30 +125,34 @@
       'ejercicio',
       'valor'
   )    
+  datos_prendas_en_mercado['valor'] <- round(datos_prendas_en_mercado['valor'] /1000000,digits = 0)
   
 
 #---- 4. Gráficos ----
+
+  histogramas = list(
+    datos_ventas_totales,
+    datos_ventas_totales,         #2
+    datos_beneficio_neto_total,   #3
+    datos_prendas_en_mercado,     #4
+    datos_tiendas,                #5
+    datos_mercados_que_opera,     #6
+    datos_ventas_por_region       #7
+  )
   
+  colores <- c("#e8563f","#3982d1","#49a28e","#f7e26b","#f092a3","#a3aed7","#0c276e")
+    
+  #-- 4.2 Grafico de ventas totales --
 
   #numero del histograma a graficar
-  histograma <- 4
+  histograma <- 2
   
   #años clave a graficar
-  ejercicios_clave <- c(2006,2008,2015)
-  
+  ejercicios_clave <- c(2015)
 
-  
-  histogramas = list(
-    datos_ventas_totales,         #1
-    datos_beneficio_neto_total,   #2
-    datos_ventas_por_region,      #3
-    datos_tiendas,                #4
-    datos_mercados_que_opera,     #5
-    datos_prendas_en_mercado      #6
-  )
 
   #creo el dataframe con los valores de los ejercicios clave
-  puntos_clave <- as.data.frame(histogramas[histograma]) %>% 
+  puntos_clave <- as.data.frame(histogramas[histograma]) %>%
                     filter(
                         ejercicio %in% ejercicios_clave
                     )
@@ -159,32 +165,188 @@
             )
         ) + 
 
-    geom_area(fill="#e1331d") +
-    geom_point(data=puntos_clave,size = 5,alpha=1,fill='black') +
-    geom_line() +
+    #geom_area(fill="#e1331d") + (color inditex)
+    geom_area(fill=colores[histograma]) +
+    geom_point(data=puntos_clave,size = 1,alpha=1,fill='black') +
+    geom_text(data=puntos_clave,aes(label=valor),hjust=0.5, vjust=-1)+
 
-    theme_classic() + 
+    xlab("Año") + 
+    ylab("Miles de millones de euros") + 
+    ylim(0L, 30L)+
+    
+    theme_minimal()
+  
+  ggsave(paste("./graficos/grafico",histograma,".png",sep=""))
+    
+  
 
-    xlab("Ejercicio") + 
-    ylab("Valor")
+  #-- 4.3 Grafico de beneficios netos --
   
-  #theme(plot.title = element_text(hjust = 0.5)) +
-  #ggtitle("Titulo") +  
+    #numero del histograma a graficar
+    histograma <- 3
+    
+    #años clave a graficar
+    ejercicios_clave <- c(2015)
+    
+    #creo el dataframe con los valores de los ejercicios clave
+    puntos_clave <- as.data.frame(histogramas[histograma]) %>%
+      filter(
+        ejercicio %in% ejercicios_clave
+      )
+    
+    #armo y presento el gráfico
+    as.data.frame(histogramas[histograma]) %>%
+      ggplot(aes(
+        x = ejercicio,
+        y = valor
+      )
+      ) + 
+      
+      geom_area(fill=colores[histograma]) +
+      geom_point(data=puntos_clave,size = 1,alpha=1,fill='black') +
+      geom_text(data=puntos_clave,aes(label=valor),hjust=0.5, vjust=-1)+
+      
+      xlab("Año") + 
+      ylab("Miles de millones de euros") + 
+      
+      
+      theme_minimal()
+    
+    ggsave(paste("./graficos/grafico",histograma,".png",sep=""))
   
   
-  
-  datos_ventas_por_region['valor'] <- datos_ventas_por_region['valor']*100
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  #-- 4.4 Grafico Cantidad de prendas en el mercado --
+    
+    #numero del histograma a graficar
+    histograma <- 4
+    
+    #años clave a graficar
+    ejercicios_clave <- c(2005,2015)
+    
+    #creo el dataframe con los valores de los ejercicios clave
+    puntos_clave <- as.data.frame(histogramas[histograma]) %>%
+      filter(
+        ejercicio %in% ejercicios_clave
+      )
+    
+    #armo y presento el gráfico
+    as.data.frame(histogramas[histograma]) %>%
+      ggplot(aes(
+        x = ejercicio,
+        y = valor
+      )
+      ) + 
+      
+      geom_area(fill=colores[histograma]) +
+      geom_point(data=puntos_clave,size = 1,alpha=1,fill='black') +
+      geom_text(data=puntos_clave,aes(label=valor),hjust=0.5, vjust=-1)+
+      
+      xlab("Año") + 
+      ylab("Millones de prendas") + 
+      # ylim(0L, 30L)+
+      
+      theme_minimal()
+    
+    ggsave(paste("./graficos/grafico",histograma,".png",sep=""))
+    
+    
+  #-- 4.5 Grafico Cantidad de tiendas --
+    
+    #numero del histograma a graficar
+    histograma <- 5
+    
+    #años clave a graficar
+    ejercicios_clave <- c(2005,2015)
+    
+    #creo el dataframe con los valores de los ejercicios clave
+    puntos_clave <- as.data.frame(histogramas[histograma]) %>%
+      filter(
+        ejercicio %in% ejercicios_clave
+      )
+    
+    #armo y presento el gráfico
+    as.data.frame(histogramas[histograma]) %>%
+      ggplot(aes(
+        x = ejercicio,
+        y = valor
+      )
+      ) + 
+      
+      geom_area(fill=colores[histograma]) +
+      geom_point(data=puntos_clave,size = 1,alpha=1,fill='black') +
+      geom_text(data=puntos_clave,aes(label=valor),hjust=0.5, vjust=-1)+
+      
+      xlab("Año") + 
+      ylab("Cantidad de tiendas") + 
+      # ylim(0L, 30L)+
+      
+      theme_minimal()
+    
+    ggsave(paste("./graficos/grafico",histograma,".png",sep=""))
+    
+    
+  #-- 4.6 Grafico Cantidad de mercados --
+    
+    #numero del histograma a graficar
+    histograma <- 6
+    
+    #años clave a graficar
+    ejercicios_clave <- c(2005,2015)
+    
+    #creo el dataframe con los valores de los ejercicios clave
+    puntos_clave <- as.data.frame(histogramas[histograma]) %>%
+      filter(
+        ejercicio %in% ejercicios_clave
+      )
+    
+    #armo y presento el gráfico
+    as.data.frame(histogramas[histograma]) %>%
+      ggplot(aes(
+        x = ejercicio,
+        y = valor
+      )
+      ) + 
+      
+      geom_area(fill=colores[histograma]) +
+      geom_point(data=puntos_clave,size = 1,alpha=1,fill='black') +
+      geom_text(data=puntos_clave,aes(label=valor),hjust=0.5, vjust=-1)+
+      
+      xlab("Año") + 
+      ylab("Cantidad de mercados") + 
+      # ylim(0L, 30L)+
+      
+      theme_minimal()
+    
+    ggsave(paste("./graficos/grafico",histograma,".png",sep=""))
+    
+    
+  #-- 4.7 Grafico ventas por region --
+    
+    #numero del histograma a graficar
+    histograma <- 7
+    
+    #armo y presento el gráfico
+    as.data.frame(histogramas[histograma]) %>%
+      ggplot(aes(
+        x = ejercicio,
+        y = valor,
+        colour = indicador
+      )
+      ) + 
+      
+      geom_line(size = 1.2) +
+      scale_color_hue(
+        name = "Región", 
+        labels = c("América", "Asia y otros", "España", "UE"))+
+      
+      
+      xlab("Año") + 
+      ylab("% de ventas por región") + 
+      
+      theme_minimal()
+    
+    ggsave(paste("./graficos/grafico",histograma,".png",sep=""))
+    
   
   
   
