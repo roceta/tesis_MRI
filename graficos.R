@@ -378,7 +378,7 @@
       
       geom_line(size = 1.2) +
       scale_color_hue(
-        name = "Región", 
+        name = "", 
         labels = c("América", "Asia y otros", "España", "UE"))+
       
       
