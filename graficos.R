@@ -2,18 +2,21 @@
 
   library(tidyverse)
   library(ggplot2)
-
+  library(treemap)
 
 #Archivos
 
   archivo_datos_inditex <- './data/datos_inditex.csv'
+  archivo_datos_superficies <- './data/superficies.csv'
 
 
 #---- 1. Leo los datos ----
 
   datos_inditex <- read.csv(archivo_datos_inditex,sep=";", dec=",")
+  datos_superficies <- read.csv(archivo_datos_superficies,sep=";", dec=",")
   
   remove(archivo_datos_inditex)
+  remove(archivo_datos_superficies)
   
   
 #---- 2. Limpio los datos ----
@@ -77,7 +80,7 @@
   
   
   #3.4 Superficie
-  datos_superficie <- select(datos_inditex %>% 
+  datos_superficie_inditex <- select(datos_inditex %>% 
     filter( 
       ejercicio %in% c(1994:2018) & 
         indicador == 'vsup'
