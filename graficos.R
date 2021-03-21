@@ -156,7 +156,7 @@
 #---- 4. Gráficos ----
 
   histogramas = list(
-    datos_ventas_totales,
+    datos_balanza_comercial,      #1
     datos_ventas_totales,         #2
     datos_beneficio_neto_total,   #3
     datos_prendas_en_mercado,     #4
@@ -172,7 +172,7 @@
   
   histograma <- 1
   
-  datos_balanza_comercial %>%
+  as.data.frame(histogramas[histograma]) %>%
     ggplot(aes(x = Año, y = Cantidad, colour = Indicador)) +
     geom_line(size = 1L) +
     scale_color_hue() +
