@@ -8,16 +8,18 @@
 
   archivo_datos_inditex <- './data/datos_inditex.csv'
   archivo_datos_superficies <- './data/superficies.csv'
-
+  archivo_datos_balanza_comercial <- './data/balanza_comercial.csv'
+  
 
 #---- 1. Leo los datos ----
 
   datos_inditex <- read.csv(archivo_datos_inditex,sep=";", dec=",")
   datos_superficies <- read.csv(archivo_datos_superficies,sep=";", dec=",")
+  datos_balanza_comercial <- read.csv(archivo_datos_balanza_comercial,sep=";", dec=",")
   
   remove(archivo_datos_inditex)
   remove(archivo_datos_superficies)
-  
+  remove(archivo_datos_balanza_comercial)
   
 #---- 2. Limpio los datos ----
   
@@ -130,6 +132,26 @@
   )    
   datos_prendas_en_mercado['valor'] <- round(datos_prendas_en_mercado['valor'] /1000000,digits = 0)
   
+  #3.9 Balanza comercial
+    regiones_de_interes <- c("España", 
+                              "Cataluña", 
+                              "Madrid",
+                              "Galicia",
+                              "Comunidad Valenciana", 
+                              "Andalucia")
+    #Paso a miles de millones de euros
+    datos_balanza_comercial["Cantidad"] <- datos_balanza_comercial["Cantidad"] /1000
+    
+    #me quedo con las regiones interesantes
+    datos_balanza_comercial <- datos_balanza_comercial %>%
+                                  filter(Region %in% regiones_de_interes) %>%
+                                  filter(Indicador %in% c("Exportaciones", "Importaciones"))
+    
+    #para reordenar los paneles del facet_wrap()
+    datos_balanza_comercial$Region <- factor(datos_balanza_comercial$Region,      
+                                             levels = regiones_de_interes)
+    
+  
 
 #---- 4. Gráficos ----
 
@@ -145,6 +167,23 @@
   
   colores <- c("#e8563f","#3982d1","#49a28e","#f7e26b","#f092a3","#a3aed7","#0c276e")
     
+  
+  #-- 4.1 Balanza comercial --
+  
+  histograma <- 1
+  
+  datos_balanza_comercial %>%
+    ggplot(aes(x = Año, y = Cantidad, colour = Indicador)) +
+    geom_line(size = 1L) +
+    scale_color_hue() +
+    theme_minimal() +
+    labs(colour="")+
+    ylab("Miles de millones de euros") +  
+    facet_wrap(vars(Region))
+  
+  ggsave(paste("./graficos/grafico",histograma,".png",sep=""))
+  
+  
   #-- 4.2 Grafico de ventas totales --
 
   #numero del histograma a graficar
